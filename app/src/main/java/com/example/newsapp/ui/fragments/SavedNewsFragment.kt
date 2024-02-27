@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newsapp.NewsApplication
 import com.example.newsapp.R
 import com.example.newsapp.adapters.NewsAdapter
 import com.example.newsapp.database.ArticleDatabase
@@ -47,7 +48,7 @@ class SavedNewsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val repository = NewsRepository(ArticleDatabase.invoke(requireContext()))
-        val providerFactory = NewsViewModelProviderFactory(repository)
+        val providerFactory = NewsViewModelProviderFactory(requireActivity().application,repository)
         viewModel = ViewModelProvider(this, providerFactory).get(NewsViewModel::class.java)
         setUpRecycler()
 

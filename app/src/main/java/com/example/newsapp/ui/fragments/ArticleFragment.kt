@@ -8,6 +8,7 @@ import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.navArgs
+import com.example.newsapp.NewsApplication
 import com.example.newsapp.R
 import com.example.newsapp.database.ArticleDatabase
 import com.example.newsapp.databinding.FragmentArticleBinding
@@ -40,38 +41,52 @@ class ArticleFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val repository = NewsRepository(ArticleDatabase.invoke(requireContext()))
-        val providerFactory = NewsViewModelProviderFactory(repository)
+        val providerFactory = NewsViewModelProviderFactory(requireActivity().application, repository)
         viewModel = ViewModelProvider(this, providerFactory).get(NewsViewModel::class.java)
 
         val article = args.article
         binding.webView.apply {
-            webViewClient= WebViewClient()
+            webViewClient = WebViewClient()
             article.url?.let { loadUrl(it) }
         }
 
-        viewModel.getSavedArticles().observe(viewLifecycleOwner){articles->
-           savedArticles=articles
-        }
-        if (savedArticles.contains(article)){
-            binding.fab.setImageResource(R.drawable.fav_icon)
-        }
-        binding.fab.setOnClickListener {
-            if (!savedArticles.contains(article)){
-                viewModel.saveArticle(article)
-                Snackbar.make(it,"Article Added Successfully",Snackbar.LENGTH_SHORT).show()
+        viewModel.getSavedArticles().observe(viewLifecycleOwner) { articles ->
+            savedArticles = articles
+            if (savedArticles.contains(article)) {
                 binding.fab.setImageResource(R.drawable.fav_icon)
             }else{
+                binding.fab.setImageResource(R.drawable.base_favorite_icon)
+            }
+        }
+
+        binding.fab.setOnClickListener {
+            if (!savedArticles.contains(article)) {
+                viewModel.saveArticle(article)
+                Snackbar.make(it, "Article Added Successfully", Snackbar.LENGTH_SHORT).show()
+                binding.fab.setImageResource(R.drawable.fav_icon)
+            } else {
+                binding.fab.setImageResource(R.drawable.base_favorite_icon)
                 viewModel.deleteArticle(article)
-                Snackbar.make(it,"Article deleted Successfully",Snackbar.LENGTH_LONG).apply {
-                    setAction("undo"){
+                Snackbar.make(it, "Article deleted Successfully", Snackbar.LENGTH_LONG).apply {
+                    setAction("undo") {
                         viewModel.saveArticle(article)
                     }
                     show()
                 }
-                binding.fab.setImageResource(R.drawable.base_favorite_icon)
             }
-
         }
     }
 
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.getSavedArticles().observe(viewLifecycleOwner) { articles ->
+            savedArticles = articles
+            if (savedArticles.contains(args.article)) {
+                binding.fab.setImageResource(R.drawable.fav_icon)
+            }else{
+                binding.fab.setImageResource(R.drawable.base_favorite_icon)
+            }
+        }
+    }
 }

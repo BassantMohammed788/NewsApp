@@ -6,11 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.newsapp.NewsApplication
 import com.example.newsapp.R
 import com.example.newsapp.adapters.NewsAdapter
 import com.example.newsapp.database.ArticleDatabase
@@ -44,7 +46,7 @@ class BreakingNewsFragment : Fragment() {
 
         //viewModel = (activity as NewsActivity).viewModel
         val repository = NewsRepository(ArticleDatabase.invoke(requireContext()))
-        val providerFactory = NewsViewModelProviderFactory(repository)
+        val providerFactory = NewsViewModelProviderFactory(requireActivity().application,repository)
         viewModel = ViewModelProvider(this, providerFactory)[NewsViewModel::class.java]
 
         setUpRecycler()
@@ -58,8 +60,7 @@ class BreakingNewsFragment : Fragment() {
                 is Resource.Error -> {
                     binding.paginationProgressBar.visibility = View.GONE
                     isLoading = false
-
-                    Log.e("TAG", "onViewCreated: " + response.message)
+                    Toast.makeText(requireContext(),"Error ${response.message}",Toast.LENGTH_LONG).show()
                 }
 
                 is Resource.Success -> {
