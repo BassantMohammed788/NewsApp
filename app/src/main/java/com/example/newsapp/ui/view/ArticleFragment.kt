@@ -1,4 +1,4 @@
-package com.example.newsapp.ui.fragments
+package com.example.newsapp.ui.view
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,25 +6,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
-import com.example.newsapp.NewsApplication
 import com.example.newsapp.R
-import com.example.newsapp.database.ArticleDatabase
 import com.example.newsapp.databinding.FragmentArticleBinding
-import com.example.newsapp.databinding.FragmentSavedNewsBinding
 import com.example.newsapp.models.Article
-import com.example.newsapp.repository.NewsRepository
-import com.example.newsapp.ui.NewsActivity
-import com.example.newsapp.ui.NewsViewModel
-import com.example.newsapp.ui.NewsViewModelProviderFactory
+import com.example.newsapp.ui.viewmodel.NewsViewModel
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class ArticleFragment : Fragment() {
 
     lateinit var binding: FragmentArticleBinding
-    lateinit var viewModel: NewsViewModel
+    private val viewModel: NewsViewModel by viewModels()
     val args:ArticleFragmentArgs by navArgs()
     var savedArticles = listOf<Article>()
 
@@ -40,10 +35,10 @@ class ArticleFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val repository = NewsRepository(ArticleDatabase.invoke(requireContext()))
+    /*    val repository = NewsRepository(ArticleDatabase.invoke(requireContext()))
         val providerFactory = NewsViewModelProviderFactory(requireActivity().application, repository)
         viewModel = ViewModelProvider(this, providerFactory).get(NewsViewModel::class.java)
-
+*/
         val article = args.article
         binding.webView.apply {
             webViewClient = WebViewClient()

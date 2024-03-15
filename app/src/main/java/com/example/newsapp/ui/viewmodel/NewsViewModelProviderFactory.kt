@@ -1,4 +1,4 @@
-package com.example.newsapp.ui
+package com.example.newsapp.ui.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.ViewModel
@@ -7,6 +7,7 @@ import com.example.newsapp.NewsApplication
 import com.example.newsapp.repository.NewsRepository
 
 
+/*
 class NewsViewModelProviderFactory(val application: Application,private val repository: NewsRepository) : ViewModelProvider.Factory
 {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -16,4 +17,4 @@ class NewsViewModelProviderFactory(val application: Application,private val repo
             throw IllegalArgumentException("ViewModel class not found")
         }
     }
-}
+}*/

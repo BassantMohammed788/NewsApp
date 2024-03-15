@@ -1,40 +1,27 @@
-package com.example.newsapp.ui.fragments
+package com.example.newsapp.ui.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.newsapp.NewsApplication
 import com.example.newsapp.R
 import com.example.newsapp.adapters.NewsAdapter
-import com.example.newsapp.database.ArticleDatabase
-import com.example.newsapp.databinding.FragmentBreakingNewsBinding
 import com.example.newsapp.databinding.FragmentSavedNewsBinding
-import com.example.newsapp.repository.NewsRepository
-import com.example.newsapp.ui.NewsActivity
-import com.example.newsapp.ui.NewsViewModel
-import com.example.newsapp.ui.NewsViewModelProviderFactory
-import com.example.newsapp.utils.Constants
-import com.example.newsapp.utils.Resource
+import com.example.newsapp.ui.viewmodel.NewsViewModel
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class SavedNewsFragment : Fragment() {
     //lateinit var viewModel: NewsViewModel
     lateinit var binding: FragmentSavedNewsBinding
-    lateinit var viewModel: NewsViewModel
+    private val viewModel: NewsViewModel by viewModels()
     lateinit var newsAdapter: NewsAdapter
 
     override fun onCreateView(
@@ -47,9 +34,10 @@ class SavedNewsFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val repository = NewsRepository(ArticleDatabase.invoke(requireContext()))
+     /*   val repository = NewsRepository(ArticleDatabase.invoke(requireContext()))
         val providerFactory = NewsViewModelProviderFactory(requireActivity().application,repository)
         viewModel = ViewModelProvider(this, providerFactory).get(NewsViewModel::class.java)
+        */
         setUpRecycler()
 
         newsAdapter.setOnItemClickListener {

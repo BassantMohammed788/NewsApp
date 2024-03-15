@@ -1,33 +1,29 @@
-package com.example.newsapp.ui.fragments
+package com.example.newsapp.ui.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AbsListView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.newsapp.NewsApplication
 import com.example.newsapp.R
 import com.example.newsapp.adapters.NewsAdapter
-import com.example.newsapp.database.ArticleDatabase
 import com.example.newsapp.databinding.FragmentBreakingNewsBinding
-import com.example.newsapp.repository.NewsRepository
-import com.example.newsapp.ui.NewsViewModel
-import com.example.newsapp.ui.NewsViewModelProviderFactory
+import com.example.newsapp.ui.viewmodel.NewsViewModel
 import com.example.newsapp.utils.Constants
 import com.example.newsapp.utils.Resource
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class BreakingNewsFragment : Fragment() {
 
     lateinit var binding: FragmentBreakingNewsBinding
-    lateinit var viewModel: NewsViewModel
+    private val viewModel: NewsViewModel by viewModels()
     lateinit var newsAdapter: NewsAdapter
     var isLoading = false
     var isScrolling = false
@@ -45,9 +41,9 @@ class BreakingNewsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         //viewModel = (activity as NewsActivity).viewModel
-        val repository = NewsRepository(ArticleDatabase.invoke(requireContext()))
+     /*   val repository = NewsRepository(ArticleDatabase.invoke(requireContext()))
         val providerFactory = NewsViewModelProviderFactory(requireActivity().application,repository)
-        viewModel = ViewModelProvider(this, providerFactory)[NewsViewModel::class.java]
+        viewModel = ViewModelProvider(this, providerFactory)[NewsViewModel::class.java]*/
 
         setUpRecycler()
         viewModel.breakingNews.observe(viewLifecycleOwner) { response ->

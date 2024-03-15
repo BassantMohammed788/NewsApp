@@ -1,4 +1,4 @@
-package com.example.newsapp.ui
+package com.example.newsapp.ui.viewmodel
 
 import android.app.Application
 import android.content.Context
@@ -9,21 +9,24 @@ import android.net.NetworkCapabilities.TRANSPORT_WIFI
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.newsapp.NewsApplication
 import com.example.newsapp.models.Article
 import com.example.newsapp.models.NewsResponse
-import com.example.newsapp.repository.NewsRepository
+import com.example.newsapp.repository.RepoInterface
 import com.example.newsapp.utils.Constants
 import com.example.newsapp.utils.Resource
 import com.google.gson.Gson
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
 import retrofit2.Response
 import java.io.IOException
+import javax.inject.Inject
 
-class NewsViewModel(application: Application, val repository: NewsRepository) :
-    AndroidViewModel(application) {
+@HiltViewModel
+class NewsViewModel @Inject constructor(@ApplicationContext application: Context, private val repository: RepoInterface) :
+    AndroidViewModel(application as Application) {
     val breakingNews: MutableLiveData<Resource<NewsResponse>> = MutableLiveData()
     var breakingNewsPage = 1
 
@@ -105,7 +108,7 @@ class NewsViewModel(application: Application, val repository: NewsRepository) :
         try {
             if (hasInternetConnection()) {
                 val response = repository.searchNews(query, searchNewsPage)
-                searchNews.postValue(handleBreakingNewsResponse(response))
+                searchNews.postValue(handleSearchNewsResponse(response))
             } else {
 
                 searchNews.postValue(Resource.Error("No Internet Connection"))
